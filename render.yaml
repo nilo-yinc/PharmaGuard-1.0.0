@@ -1,0 +1,62 @@
+services:
+  - type: web
+    name: pharmaguard-node
+    runtime: node
+    rootDir: backend/express-service
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /health
+    autoDeploy: true
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: JWT_EXPIRY
+        value: 24h
+      - key: FRONTEND_URL
+        value: https://pharmaguard-frontend-cyan.vercel.app
+      - key: FRONTEND_URLS
+        value: https://pharmaguard-frontend-cyan.vercel.app,http://localhost:5173,http://localhost:3000
+      - key: FASTAPI_URL
+        value: https://pharmaguard-python.onrender.com
+      - key: BACKEND_BASE_URL
+        value: https://pharmaguard-node.onrender.com
+      - key: MONGO_URI
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+      - key: EMAIL_HOST
+        sync: false
+      - key: EMAIL_PORT
+        sync: false
+      - key: EMAIL_SECURE
+        sync: false
+      - key: EMAIL_USER
+        sync: false
+      - key: EMAIL_PASS
+        sync: false
+      - key: SENDER_EMAIL
+        sync: false
+      - key: GOOGLE_CLIENT_ID
+        sync: false
+      - key: GOOGLE_CLIENT_SECRET
+        sync: false
+      - key: GOOGLE_REDIRECT_URI
+        value: https://pharmaguard-node.onrender.com/api/v1/users/google/callback
+      - key: GOOGLE_JWKS_URL
+        value: https://www.googleapis.com/oauth2/v3/certs
+
+  - type: web
+    name: pharmaguard-python
+    runtime: python
+    rootDir: backend/fastapi-service
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /health
+    autoDeploy: true
+    envVars:
+      - key: ENABLE_EXTENDED_DRUG_MAP
+        value: "false"
+      - key: GROQ_API_KEY
+        sync: false

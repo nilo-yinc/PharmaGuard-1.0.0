@@ -1,0 +1,320 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom CSS Variables — Clean Medical Palette */
+:root {
+  --primary: #0D7377;
+  --primary-light: rgba(13, 115, 119, 0.12);
+  --primary-hover: #0A5C5F;
+  --accent: #E8645A;
+  --accent-light: rgba(232, 100, 90, 0.12);
+  --accent-hover: #D4524A;
+  --bg-main: #F0F7FF;
+  --bg-surface: rgba(255, 255, 255, 0.82);
+  --bg-muted: rgba(240, 247, 255, 0.72);
+  --text-primary: #1F2937;
+  --text-secondary: #6B7280;
+  --text-muted: #9CA3AF;
+  --border: rgba(209, 213, 219, 0.7);
+  --border-hover: #9CA3AF;
+  --success: #059669;
+  --success-light: rgba(5, 150, 105, 0.12);
+  --warning: #D97706;
+  --warning-light: rgba(217, 119, 6, 0.12);
+  --danger: #DC2626;
+  --danger-light: rgba(220, 38, 38, 0.12);
+  --info: #2563EB;
+  --info-light: rgba(37, 99, 235, 0.12);
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08), 0 0 0 1px rgba(0, 0, 0, 0.04);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.12), 0 2px 4px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.15), 0 4px 8px rgba(0, 0, 0, 0.08);
+  --backdrop: blur(16px);
+}
+
+.dark {
+  --primary: #14B8A6;
+  --primary-light: rgba(20, 184, 166, 0.15);
+  --primary-hover: #0D7377;
+  --accent: #F87171;
+  --accent-light: rgba(248, 113, 113, 0.15);
+  --accent-hover: #FCA5A5;
+  --bg-main: #000000;
+  --bg-surface: rgba(10, 15, 22, 0.80);
+  --bg-muted: rgba(18, 24, 34, 0.75);
+  --text-primary: #F3F4F6;
+  --text-secondary: #9CA3AF;
+  --text-muted: #6B7280;
+  --border: rgba(55, 65, 81, 0.80);
+  --border-hover: #6B7280;
+  --success: #10B981;
+  --success-light: rgba(16, 185, 129, 0.15);
+  --warning: #F59E0B;
+  --warning-light: rgba(245, 158, 11, 0.15);
+  --danger: #EF4444;
+  --danger-light: rgba(239, 68, 68, 0.15);
+  --info: #3B82F6;
+  --info-light: rgba(59, 130, 246, 0.15);
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255,255,255,0.04);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.7), 0 2px 4px rgba(0, 0, 0, 0.5);
+  --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.8), 0 4px 8px rgba(0, 0, 0, 0.6);
+  --backdrop: blur(20px);
+}
+
+/* Base styles */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Inter', system-ui, sans-serif;
+  background-color: var(--bg-main);
+  color: var(--text-primary);
+  overflow-x: hidden;
+  line-height: 1.6;
+}
+
+/* Light mode is default — remove old dark mode as default */
+body.light {
+  background-color: var(--bg-main);
+  color: var(--text-primary);
+}
+
+/* Utility classes */
+@layer components {
+  .card {
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    border-radius: 1rem;
+    box-shadow: var(--shadow-sm);
+  }
+
+  .card:hover {
+    box-shadow: var(--shadow-md);
+    border-color: var(--border-hover);
+  }
+
+  /* Keep glass-card class name for compatibility but make it clean */
+  .glass-card {
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    border-radius: 1rem;
+    box-shadow: var(--shadow-sm);
+    backdrop-filter: var(--backdrop);
+    -webkit-backdrop-filter: var(--backdrop);
+  }
+
+  .glass-card-light {
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    border-radius: 1rem;
+    box-shadow: var(--shadow-sm);
+    backdrop-filter: var(--backdrop);
+    -webkit-backdrop-filter: var(--backdrop);
+  }
+
+  .gradient-text {
+    color: var(--primary);
+    font-weight: 700;
+  }
+
+  .gradient-text-green {
+    color: var(--success);
+    font-weight: 700;
+  }
+
+  .neon-border {
+    border: 1px solid var(--border);
+  }
+
+  .btn-primary {
+    @apply relative px-8 py-4 rounded-xl font-semibold text-white overflow-hidden transition-all duration-200;
+    background: var(--accent);
+  }
+
+  .btn-primary:hover {
+    @apply scale-[1.02];
+    background: var(--accent-hover);
+    box-shadow: var(--shadow-md);
+  }
+
+  .btn-primary::before {
+    display: none;
+  }
+
+  .btn-secondary {
+    @apply px-6 py-3 rounded-xl font-medium border transition-all duration-200;
+    border-color: var(--border);
+    color: var(--primary);
+  }
+
+  .btn-secondary:hover {
+    background: var(--primary-light);
+    border-color: var(--primary);
+  }
+
+  .risk-safe {
+    color: var(--success);
+    border-color: #D1FAE5;
+    background: var(--success-light);
+  }
+
+  .risk-adjust {
+    color: var(--warning);
+    border-color: #FDE68A;
+    background: var(--warning-light);
+  }
+
+  .risk-toxic {
+    color: var(--danger);
+    border-color: #FECACA;
+    background: var(--danger-light);
+  }
+
+  .risk-ineffective {
+    color: var(--info);
+    border-color: #BFDBFE;
+    background: var(--info-light);
+  }
+
+  .risk-unknown {
+    color: var(--text-secondary);
+    border-color: var(--border);
+    background: var(--bg-muted);
+  }
+
+  .scrollbar-thin {
+    scrollbar-width: thin;
+    scrollbar-color: #D1D5DB transparent;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    background-color: #D1D5DB;
+    border-radius: 2px;
+  }
+
+  .section-header {
+    @apply text-3xl font-bold mb-2;
+    color: var(--text-primary);
+  }
+}
+
+/* Animations — kept subtle */
+@keyframes float {
+
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+/* Shimmer loading effect */
+.shimmer {
+  background: linear-gradient(90deg,
+      #F3F4F6 25%,
+      #E5E7EB 50%,
+      #F3F4F6 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+/* Progress bar animation */
+.progress-bar-fill {
+  transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Tooltip */
+.tooltip {
+  @apply absolute z-50 px-3 py-2 text-sm rounded-lg pointer-events-none;
+  background: var(--text-primary);
+  color: white;
+  box-shadow: var(--shadow-lg);
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-muted);
+}
+
+::-webkit-scrollbar-thumb {
+  background: #D1D5DB;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #9CA3AF;
+}
+
+/* Selection color */
+::selection {
+  background: rgba(13, 115, 119, 0.15);
+  color: var(--text-primary);
+}
+
+/* Focus ring */
+*:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* ── DNA Background Glass Effect ────────────────────────────────────────────── */
+/* All rounded surface cards get frosted-glass blur against the DNA background  */
+
+/* Target common card patterns used throughout the app */
+[style*="var(--bg-surface)"],
+[style*="var(--bg-muted)"] {
+  backdrop-filter: var(--backdrop);
+  -webkit-backdrop-filter: var(--backdrop);
+}
+
+/* Navbar gets glass treatment */
+nav {
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
+}
+
+/* DNA background shimmer pulse for dark mode */
+@keyframes dna-pulse {
+  0%, 100% { opacity: 0.30; }
+  50%       { opacity: 0.38; }
+}
+@keyframes dna-pulse-light {
+  0%, 100% { opacity: 0.46; }
+  50%       { opacity: 0.58; }
+}
+
+html.dark  .dna-bg-img { animation: dna-pulse       6s ease-in-out infinite; }
+html:not(.dark) .dna-bg-img { animation: dna-pulse-light 8s ease-in-out infinite; }
