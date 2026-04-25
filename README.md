@@ -5,7 +5,11 @@
 <h3 align="center">AI-Powered Pharmacogenomics Risk Prediction Platform</h3>
 
 <p align="center">
-  <em>Personalized Precision Medicine — Upload your genomic VCF file and receive real-time pharmacogenomic drug safety insights powered by AI.</em>
+  <em>A personal precision-medicine project — upload a genomic VCF file and get real-time pharmacogenomic drug safety insights powered by AI.</em>
+</p>
+
+<p align="center">
+  Built and maintained by Niloy Mallik.
 </p>
 
 <p align="center">
@@ -31,15 +35,15 @@
 
 ## 🩺 What is PharmaGuard?
 
-PharmaGuard is a full-stack clinical decision support platform that bridges the gap between **raw genomic data** and **actionable drug safety insights**. Clinicians, researchers, and patients can upload a standard VCF (Variant Call Format) file, select medications of interest, and receive AI-generated pharmacogenomic risk assessments aligned with **CPIC (Clinical Pharmacogenetics Implementation Consortium)** guidelines.
+I built PharmaGuard as a full-stack clinical decision support platform that bridges the gap between **raw genomic data** and **actionable drug safety insights**. It lets a user upload a standard VCF (Variant Call Format) file, select medications of interest, and receive AI-generated pharmacogenomic risk assessments aligned with **CPIC (Clinical Pharmacogenetics Implementation Consortium)** guidelines.
 
-### The Problem
+### Why I built it
 
-> Over **95% of people** carry at least one pharmacogenomic variant that affects drug response. Adverse drug reactions cause **~100,000 deaths/year** in the US alone. Most clinicians don't have time to manually cross-reference genetic variants with drug interaction databases.
+> Over **95% of people** carry at least one pharmacogenomic variant that affects drug response. Adverse drug reactions cause **~100,000 deaths/year** in the US alone. I wanted a practical way to make that information easier to read and act on.
 
-### Our Solution
+### What it does
 
-PharmaGuard automates the entire pipeline — from VCF parsing to clinical recommendation — delivering structured risk reports with confidence scores, severity levels, mechanistic explanations, and dosage recommendations in seconds.
+PharmaGuard automates the pipeline from VCF parsing to clinical recommendation, delivering structured risk reports with confidence scores, severity levels, mechanistic explanations, and dosage recommendations in seconds.
 
 ---
 
@@ -172,8 +176,8 @@ PharmaGuard automates the entire pipeline — from VCF parsing to clinical recom
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/your-username/PharmaGuard.git
-cd PharmaGuard
+git clone git@github.com:nilo-yinc/PharmaGuard-1.0.0.git
+cd PharmaGuard-1.0.0
 ```
 
 ### 2. Start the Express Backend
@@ -393,11 +397,7 @@ PharmaGuard/
 
 ## 🤝 Contributing
 
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+This is currently a personal project, so I keep the main branch clean and focused. If I open it up for contributions later, I’ll add a simple contribution guide here.
 
 ---
 
@@ -408,5 +408,5 @@ This project is licensed under the ISC License.
 ---
 
 <p align="center">
-  Built with 🧬 by the PharmaGuard Team
+  Built by Niloy Mallik
 </p>
