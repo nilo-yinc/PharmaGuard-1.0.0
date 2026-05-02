@@ -1,4 +1,6 @@
 const { PharmaGuardRecord } = require('../models');
+const User = require('../../auth/models/user.models');
+const { sendAnalysisReportEmail } = require('../../auth/utils/sendingMail.utils');
 
 const FALLBACK_DRUG_LIBRARY = {
   CODEINE: {
@@ -130,6 +132,22 @@ const buildFallbackResults = (drugs = []) => {
       })
     };
   });
+};
+
+const sendAnalysisEmailForRecord = async ({ record, results, mode }) => {
+  try {
+    const user = await User.findById(record.userId).select('name email');
+    if (!user?.email) return;
+
+    await sendAnalysisReportEmail(user.email, {
+      name: user.name,
+      record,
+      results,
+      mode,
+    });
+  } catch (error) {
+    console.error('Failed to send analysis report email:', error.message);
+  }
 };
 
 /**
@@ -455,6 +473,11 @@ const triggerAnalysis = async (req, res) => {
       // 4. Save results to DB
       if (response.data && response.data.results) {
          await record.addResults(response.data.results);
+         await sendAnalysisEmailForRecord({
+           record,
+           results: response.data.results,
+           mode: response.data.mode || 'analysis',
+         });
       }
 
       res.json({
@@ -471,6 +494,11 @@ const triggerAnalysis = async (req, res) => {
 
       const fallbackResults = buildFallbackResults(drugs);
       await record.addResults(fallbackResults);
+      await sendAnalysisEmailForRecord({
+        record,
+        results: fallbackResults,
+        mode: 'fallback',
+      });
 
       return res.status(200).json({
         success: true,

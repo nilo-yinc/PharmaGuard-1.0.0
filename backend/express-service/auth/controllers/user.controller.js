@@ -5,6 +5,9 @@ const axios = require('axios');
 const jwksClient = require('jwks-rsa');
 const {
   sendResetPasswordOtpEmail,
+  sendWelcomeEmail,
+  sendLoginNotificationEmail,
+  sendPasswordChangedEmail,
 } = require('../utils/sendingMail.utils');
 
 const getFrontendUrl = () =>
@@ -23,6 +26,12 @@ const safeUserPayload = (user) => ({
   role: user.role,
   createdAt: user.createdAt,
   lastLogin: user.updatedAt,
+});
+
+const getRequestMeta = (req) => ({
+  timestamp: new Date().toISOString(),
+  ipAddress: req.headers['x-forwarded-for']?.split(',')[0]?.trim() || req.ip || req.socket?.remoteAddress || '',
+  userAgent: req.headers['user-agent'] || '',
 });
 
 const generateRandomToken = () => crypto.randomBytes(24).toString('hex');
@@ -70,6 +79,8 @@ const registerUser = async (req, res) => {
       verificationTokenExpiry: null,
     });
 
+    await sendWelcomeEmail(user.email, { name: user.name, provider: 'email and password' });
+
     return res.status(201).json({
       status: true,
       message: 'User registered successfully.',
@@ -101,6 +112,11 @@ const login = async (req, res) => {
 
     const jwtToken = createJwtForUser(user);
     setAuthCookie(res, jwtToken);
+    await sendLoginNotificationEmail(user.email, {
+      name: user.name,
+      provider: 'email and password',
+      meta: getRequestMeta(req),
+    });
 
     return res.status(200).json({
       status: true,
@@ -174,7 +190,7 @@ const forgotPassword = async (req, res) => {
     user.resetPasswordVerifiedToken = null;
     user.resetPasswordVerifiedTokenExpiry = null;
     await user.save();
-    const emailSent = await sendResetPasswordOtpEmail(user.email, otp);
+    const emailSent = await sendResetPasswordOtpEmail(user.email, otp, user.name);
 
     const response = {
       status: true,
@@ -254,6 +270,10 @@ const resetPassword = async (req, res) => {
     user.resetPasswordVerifiedToken = null;
     user.resetPasswordVerifiedTokenExpiry = null;
     await user.save();
+    await sendPasswordChangedEmail(user.email, {
+      name: user.name,
+      meta: getRequestMeta(req),
+    });
 
     return res.status(200).json({ status: true, message: 'Password updated successfully' });
   } catch (error) {
@@ -389,6 +409,7 @@ const googleCallback = async (req, res) => {
     const { code, state } = req.query;
     const savedState = req.cookies.oauth_state;
     const savedNonce = req.cookies.oauth_nonce;
+    let createdFromGoogle = false;
 
     res.clearCookie('oauth_state');
     res.clearCookie('oauth_nonce');
@@ -438,6 +459,7 @@ const googleCallback = async (req, res) => {
           refreshToken: refresh_token || null,
           isVerified: true,
         });
+        createdFromGoogle = true;
       }
     } else if (refresh_token) {
       user.refreshToken = refresh_token;
@@ -446,6 +468,14 @@ const googleCallback = async (req, res) => {
 
     const jwtToken = createJwtForUser(user);
     setAuthCookie(res, jwtToken);
+    if (createdFromGoogle) {
+      await sendWelcomeEmail(user.email, { name: user.name, provider: 'Google' });
+    }
+    await sendLoginNotificationEmail(user.email, {
+      name: user.name,
+      provider: 'Google',
+      meta: getRequestMeta(req),
+    });
 
     return res.redirect(
       `${getFrontendUrl()}/auth/google/callback?token=${jwtToken}&name=${encodeURIComponent(user.name)}&email=${encodeURIComponent(user.email)}&id=${user._id}`
