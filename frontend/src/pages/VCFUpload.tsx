@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useDropzone } from 'react-dropzone';
 import {
     FileText, CheckCircle, XCircle,
-    AlertCircle, Info, Trash2, Dna, Upload
+    AlertCircle, Info, Trash2, Dna, Upload, FlaskConical
 } from 'lucide-react';
 import { FileUploadDropzone } from '../components/ui/file-upload';
 
@@ -21,6 +21,7 @@ const VCFUpload: React.FC<VCFUploadProps> = ({ onFileAccepted, onRecordCreated }
     const [isUploading, setIsUploading] = useState(false);
     const [isSuccess, setIsSuccess] = useState(false);
     const [showTooltip, setShowTooltip] = useState(false);
+    const [isLoadingSample, setIsLoadingSample] = useState(false);
 
     const mockVariants = 450; // Approximated count
 
@@ -100,19 +101,32 @@ const VCFUpload: React.FC<VCFUploadProps> = ({ onFileAccepted, onRecordCreated }
         return `${(bytes / (1024 * 1024)).toFixed(2)} MB`;
     };
 
-    const getBorderColor = () => {
-        if (isDragReject || fileError) return 'var(--danger)';
-        if (isDragActive) return 'var(--primary)';
-        if (isSuccess) return 'var(--success)';
-        return 'var(--border-hover)';
-    };
+    const handleUseSampleFile = useCallback(async (event: React.MouseEvent<HTMLButtonElement>) => {
+        event.preventDefault();
+        event.stopPropagation();
 
-    const getBgColor = () => {
-        if (isDragReject || fileError) return 'var(--danger-light)';
-        if (isDragActive) return 'var(--primary-light)';
-        if (isSuccess) return 'var(--success-light)';
-        return 'var(--bg-muted)';
-    };
+        setFileError('');
+        setIsLoadingSample(true);
+
+        try {
+            const response = await fetch('/sample-files/test.vcf');
+            if (!response.ok) {
+                throw new Error('Unable to load the sample VCF file.');
+            }
+
+            const blob = await response.blob();
+            const sampleFile = new File([blob], 'test.vcf', {
+                type: 'text/plain',
+                lastModified: Date.now(),
+            });
+
+            await processFile(sampleFile);
+        } catch (error: any) {
+            setFileError(error.message || 'Failed to load sample VCF file.');
+        } finally {
+            setIsLoadingSample(false);
+        }
+    }, [processFile]);
 
     return (
         <section id="upload" className="py-20 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto">
@@ -247,6 +261,24 @@ const VCFUpload: React.FC<VCFUploadProps> = ({ onFileAccepted, onRecordCreated }
                                     <span>Max 5MB</span>
                                     <span>•</span>
                                     <span>VCF v4.1 / v4.2</span>
+                                </div>
+                                <div className="pt-2">
+                                    <button
+                                        type="button"
+                                        onClick={handleUseSampleFile}
+                                        disabled={isLoadingSample}
+                                        className="inline-flex items-center gap-2 px-3 py-2 rounded-xl text-sm font-semibold transition-all duration-200"
+                                        style={{
+                                            background: 'rgba(13,115,119,0.12)',
+                                            border: '1px solid rgba(13,115,119,0.35)',
+                                            color: 'var(--primary)',
+                                            opacity: isLoadingSample ? 0.7 : 1,
+                                            cursor: isLoadingSample ? 'not-allowed' : 'pointer',
+                                        }}
+                                    >
+                                        <FlaskConical size={15} />
+                                        {isLoadingSample ? 'Loading sample VCF...' : 'Use sample VCF to test'}
+                                    </button>
                                 </div>
                             </motion.div>
                         )}
