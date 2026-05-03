@@ -47,6 +47,16 @@ PharmaGuard automates the pipeline from VCF parsing to clinical recommendation, 
 
 ---
 
+
+## Interface : 
+
+<img width="1919" height="1039" alt="image" src="https://github.com/user-attachments/assets/282bd37f-4d25-452e-aecd-15be9d9de615" />
+
+<img width="1919" height="1037" alt="image" src="https://github.com/user-attachments/assets/929516cf-d072-40bc-aea2-44e92e4aaf52" />
+
+
+---
+
 ## ✨ Features
 
 ### 🔬 Core Analysis Engine
